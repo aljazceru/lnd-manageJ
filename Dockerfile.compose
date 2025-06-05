@@ -1,0 +1,25 @@
+# Build the application
+# This Docker image expects database connection details via environment variables when running (see docker-compose.yml).
+FROM gradle:8-jdk21 AS build
+WORKDIR /app
+COPY . .
+RUN gradle application:bootJar
+
+# Runtime image with JRE only
+FROM eclipse-temurin:21-jre
+WORKDIR /root
+
+# copy the built jar
+COPY --from=build /app/application/build/libs/application-boot.jar ./application-boot.jar
+
+# default configuration
+RUN mkdir -p /root/.config \
+    && echo "[lnd]" >> /root/.config/lnd-manageJ.conf \
+    && echo "host=localhost" >> /root/.config/lnd-manageJ.conf \
+    && echo "macaroon_file=/root/.lnd/data/chain/bitcoin/testnet/admin.macaroon" >> /root/.config/lnd-manageJ.conf
+
+RUN echo "server.address=0.0.0.0" >> /root/override.properties
+
+EXPOSE 8081
+
+CMD java -jar application-boot.jar --spring.config.location=classpath:application.properties,/root/override.properties
