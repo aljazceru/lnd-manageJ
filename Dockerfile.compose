@@ -3,7 +3,7 @@
 FROM gradle:8-jdk21 AS build
 WORKDIR /app
 COPY . .
-RUN gradle application:bootJar
+RUN ./gradlew :application:bootJar
 
 # Runtime image with JRE only
 FROM eclipse-temurin:21-jre
