@@ -23,5 +23,7 @@ services:
     volumes:
       - ~/.lnd:/root/.lnd:ro
       - ~/.config/lnd-manageJ.conf:/root/.config/lnd-manageJ.conf:ro
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 volumes:
   postgres-data:
