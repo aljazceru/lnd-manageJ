@@ -1,0 +1,19 @@
+# Build the application
+# This Docker image expects database connection details via environment variables when running (see docker-compose.yml).
+FROM gradle:8-jdk21 AS build
+WORKDIR /app
+COPY . .
+RUN ./gradlew :application:bootJar
+
+# Runtime image with JRE only
+FROM eclipse-temurin:21-jre
+WORKDIR /root
+
+# copy the built jar
+COPY --from=build /app/application/build/libs/application-boot.jar ./application-boot.jar
+
+RUN echo "server.address=0.0.0.0" >> /root/override.properties
+
+EXPOSE 8081
+
+CMD java -jar application-boot.jar --spring.config.location=classpath:application.properties,/root/override.properties
