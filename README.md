@@ -169,6 +169,18 @@ Configure the database so that the user `bitcoin` can access `lndmanagej` withou
 
 Install Java 21 and run `./start.sh`.
 
+### Using Docker Compose
+You can start lnd-manageJ together with a PostgreSQL database using Docker Compose.
+Run the following command in the repository root to build the image and start both services:
+
+```bash
+docker compose up --build
+```
+
+The application listens on port `8081`.  Adjust the volume mounts in
+`docker-compose.yml` so that the container can access your lnd data and
+`lnd-manageJ.conf` file.
+
 ## Disclaimer
 This project is not related to bitromortac's Python based [lndmanage](https://github.com/bitromortac/lndmanage).
 
