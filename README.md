@@ -180,6 +180,15 @@ docker compose up --build
 The application listens on port `8081`.  Adjust the volume mounts in
 `docker-compose.yml` so that the container can access your lnd data and
 `lnd-manageJ.conf` file.
+If lnd is running on the host machine, add the following to the
+`lnd-managej` service in `docker-compose.yml`:
+
+```yaml
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+```
+and set `host=host.docker.internal` in the `[lnd]` section of your
+`lnd-manageJ.conf` file so that lnd-manageJ can reach lnd on the host.
 
 ## Disclaimer
 This project is not related to bitromortac's Python based [lndmanage](https://github.com/bitromortac/lndmanage).
